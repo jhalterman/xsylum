@@ -4,9 +4,11 @@
 
 ## Introduction
 
-Stuck with legacy services that still use XML? Suffering from head explosion at the sight of XML parser APIs? Yea, me too. Xsylum provides a sane API on top of the JDK's XML parser API.
+Why XML? Why indeed. 
 
-**Note:** This thing is not fully featured and doesn't support much DOM manpulation. It's mostly intended for read operations, which keeps the overhead low'ish.
+But let's say you're working with some legacy services where XML is the thing. And you discover that the available XML parser APIs are bad. Really bad. What do you? Maybe you use Xsylum, that's what.
+
+Xsylum is a dead simple simple wrapper around the Java XML parser API. It's mostly intended for read operations, opting to traverse nodes on demand (when searching children) instead of eagerly building a separate DOM.
 
 ## Setup
 
@@ -14,12 +16,10 @@ Stuck with legacy services that still use XML? Suffering from head explosion at 
 
 ## Usage
 
-```
-XmlElement element = Xsylum.xmlElementFor(xmlFile);
+```java
+XmlElement element = Xsylum.elementFor(xmlFile);
 List<XmlElement> children = element.children();
-List<XmlElement> books = element.get("books");
-
-XmlElement book = books.get(0);
+XmlElement book = element.get("books").get(0);
 Map<String, String> attrs = book.attributes();
 String value = book.value();
 ```
