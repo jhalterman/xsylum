@@ -16,6 +16,42 @@ import org.w3c.dom.NodeList;
 public abstract class XPathSearchable<T> {
   protected final T source;
 
+  static interface Converter<T> {
+    Converter<Integer> intConverter = new Converter<Integer>() {
+      @Override
+      public Integer convert(String value) {
+        try {
+          return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+          return 0;
+        }
+      }
+    };
+
+    Converter<Boolean> booleanConverter = new Converter<Boolean>() {
+      @Override
+      public Boolean convert(String value) {
+        value = value.toLowerCase();
+        if ("true".equals(value) || "1".equals(value) || "yes".equals(value) || "y".equals(value))
+          return true;
+        return false;
+      }
+    };
+
+    Converter<Double> doubleConverter = new Converter<Double>() {
+      @Override
+      public Double convert(String value) {
+        try {
+          return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+          return 0.0;
+        }
+      }
+    };
+
+    T convert(String value);
+  }
+
   XPathSearchable(T source) {
     this.source = source;
   }
@@ -59,8 +95,7 @@ public abstract class XPathSearchable<T> {
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   public String findValue(String expression) throws XPathExpressionException {
-    XPathExpression expr = XPathFactory.newInstance().newXPath().compile(expression);
-    return expr.evaluate(source);
+    return XPathFactory.newInstance().newXPath().compile(expression).evaluate(source);
   }
 
   /**
@@ -70,10 +105,7 @@ public abstract class XPathSearchable<T> {
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   public boolean findValueAsBoolean(String expression) throws XPathExpressionException {
-    String value = findValue(expression).toLowerCase();
-    if ("true".equals(value) || "1".equals(value) || "yes".equals(value) || "y".equals(value))
-      return true;
-    return false;
+    return Converter.booleanConverter.convert(findValue(expression).toLowerCase());
   }
 
   /**
@@ -83,12 +115,7 @@ public abstract class XPathSearchable<T> {
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   public double findValueAsDouble(String expression) throws XPathExpressionException {
-    String value = findValue(expression);
-    try {
-      return Double.parseDouble(value);
-    } catch (NumberFormatException e) {
-      return 0;
-    }
+    return Converter.doubleConverter.convert(findValue(expression));
   }
 
   /**
@@ -98,12 +125,7 @@ public abstract class XPathSearchable<T> {
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   public int findValueAsInt(String expression) throws XPathExpressionException {
-    String value = findValue(expression);
-    try {
-      return Integer.parseInt(value);
-    } catch (NumberFormatException e) {
-      return 0;
-    }
+    return Converter.intConverter.convert(findValue(expression));
   }
 
   /**
@@ -112,16 +134,58 @@ public abstract class XPathSearchable<T> {
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   public List<String> findValues(String expression) throws XPathExpressionException {
+    return findValuesInternal(expression, null);
+  }
+
+  /**
+   * Finds the values for the XPath {@code expression} ending in text() as booleans. Returns true
+   * for "true", "1", "yes", "y", else returns false.
+   * 
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public List<Boolean> findValuesAsBooleans(String expression) throws XPathExpressionException {
+    return findValuesInternal(expression, Converter.booleanConverter);
+  }
+
+  /**
+   * Finds the values for the XPath {@code expression} ending in text() as doubles. Returns 0 for
+   * values that cannot be parsed to a double.
+   * 
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public List<Double> findValuesAsDoubles(String expression) throws XPathExpressionException {
+    return findValuesInternal(expression, Converter.doubleConverter);
+  }
+
+  /**
+   * Finds the values for the XPath {@code expression} ending in text() as integers. Returns 0 for
+   * values that cannot be parsed to an int.
+   * 
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public List<Integer> findValuesAsInts(String expression) throws XPathExpressionException {
+    return findValuesInternal(expression, Converter.intConverter);
+  }
+
+  /**
+   * Finds the values for the XPath {@code expression} ending in text().
+   * 
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  @SuppressWarnings("unchecked")
+  public <V> List<V> findValuesInternal(String expression, Converter<V> converter)
+      throws XPathExpressionException {
     XPathExpression expr = XPathFactory.newInstance().newXPath().compile(expression);
     NodeList nodeList = (NodeList) expr.evaluate(source, XPathConstants.NODESET);
     if (nodeList.getLength() == 0)
       return Collections.emptyList();
 
-    List<String> values = new ArrayList<String>();
+    List<V> values = new ArrayList<V>();
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node node = nodeList.item(i);
       if (node.getNodeType() == Node.TEXT_NODE)
-        values.add(node.getNodeValue());
+        values.add(converter == null ? (V) node.getNodeValue()
+            : converter.convert(node.getNodeValue()));
     }
 
     return values;

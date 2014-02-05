@@ -32,6 +32,11 @@ public class XmlDocumentTest {
         Arrays.asList("Gambardella, Matthew", "Ralls, Kim"));
   }
 
+  public void shouldFindValuesAsDoubles() throws Exception {
+    List<Double> expected = Arrays.asList(44.95, 5.95, 5.95, 5.95, 5.95);
+    assertEquals(document.findValuesAsDoubles("//price/text()"), expected);
+  }
+
   public void shouldFind() throws Exception {
     assertEquals(document.find("//author").value(), "Gambardella, Matthew");
     assertEquals(document.find("/catalog/book[2]/author").value(), "Ralls, Kim");

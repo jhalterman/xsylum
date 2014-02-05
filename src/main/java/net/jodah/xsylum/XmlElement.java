@@ -40,10 +40,7 @@ public final class XmlElement extends XPathSearchable<Element> {
    * @throws XsylumException if the {@code attribute} cannot be found
    */
   public boolean attributeAsBoolean(String attribute) throws XsylumException {
-    String value = attribute(attribute).toLowerCase();
-    if ("true".equals(value) || "1".equals(value) || "yes".equals(value) || "y".equals(value))
-      return true;
-    return false;
+    return Converter.booleanConverter.convert(attribute(attribute));
   }
 
   /**
@@ -53,12 +50,7 @@ public final class XmlElement extends XPathSearchable<Element> {
    * @throws XsylumException if the {@code attribute} cannot be found
    */
   public double attributeAsDouble(String attribute) throws XsylumException {
-    String value = attribute(attribute);
-    try {
-      return Double.parseDouble(value);
-    } catch (NumberFormatException e) {
-      return 0;
-    }
+    return Converter.doubleConverter.convert(attribute(attribute));
   }
 
   /**
@@ -68,12 +60,7 @@ public final class XmlElement extends XPathSearchable<Element> {
    * @throws XsylumException if the {@code attribute} cannot be found
    */
   public int attributeAsInt(String attribute) throws XsylumException {
-    String value = attribute(attribute);
-    try {
-      return Integer.parseInt(value);
-    } catch (NumberFormatException e) {
-      return 0;
-    }
+    return Converter.intConverter.convert(attribute(attribute));
   }
 
   /**
@@ -248,31 +235,20 @@ public final class XmlElement extends XPathSearchable<Element> {
    * false.
    */
   public boolean valueAsBoolean() {
-    String value = value().toLowerCase();
-    if ("true".equals(value) || "1".equals(value) || "yes".equals(value) || "y".equals(value))
-      return true;
-    return false;
+    return Converter.booleanConverter.convert(value());
   }
 
   /**
    * Get the element value as a double. Returns 0 if value cannot be parsed to a double.
    */
   public double valueAsDouble() {
-    try {
-      return Double.parseDouble(value());
-    } catch (NumberFormatException e) {
-      return 0;
-    }
+    return Converter.doubleConverter.convert(value());
   }
 
   /**
    * Get the element value as an integer. Returns 0 if value cannot be parsed to an integer.
    */
   public int valueAsInt() {
-    try {
-      return Integer.parseInt(value());
-    } catch (NumberFormatException e) {
-      return 0;
-    }
+    return Converter.intConverter.convert(value());
   }
 }

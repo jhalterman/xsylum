@@ -48,6 +48,7 @@ List<XmlElement> authors = XmlElement author = document.findAll("//author");
 String author = document.findValue("//author/text()");
 int copiesSold = book.findValueAsInt(".//copies-sold/text()");
 List<String> authors = document.findValues("/catalog/book/author/text()");
+List<Integer> allCopiesSold = document.findValuesAsInts("/catalog/book/copies-sold/text()");
 ```
 
 ## License
