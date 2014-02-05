@@ -16,11 +16,9 @@ import org.w3c.dom.NodeList;
  * 
  * @author Jonathan Halterman
  */
-public final class XmlElement {
-  private final Element element;
-
+public final class XmlElement extends XPathSearchable<Element> {
   public XmlElement(Element element) {
-    this.element = element;
+    super(element);
   }
 
   /**
@@ -29,7 +27,7 @@ public final class XmlElement {
    * @throws XsylumException if the {@code attribute} cannot be found
    */
   public String attribute(String attribute) throws XsylumException {
-    String value = element.getAttribute(attribute);
+    String value = source.getAttribute(attribute);
     if (value == null)
       throw new XsylumException("Attribute %s does not exist", attribute);
     return value;
@@ -83,10 +81,10 @@ public final class XmlElement {
    * attributes.
    */
   public Map<String, String> attributes() {
-    if (!element.hasAttributes())
+    if (!source.hasAttributes())
       return Collections.emptyMap();
 
-    NamedNodeMap attributes = element.getAttributes();
+    NamedNodeMap attributes = source.getAttributes();
     Map<String, String> result = new HashMap<String, String>();
     for (int i = 0; i < attributes.getLength(); i++) {
       Node node = attributes.item(i);
@@ -100,13 +98,13 @@ public final class XmlElement {
    * Returns the element's children, else empty list if the element has no children.
    */
   public List<XmlElement> children() {
-    NodeList children = element.getChildNodes();
+    NodeList children = source.getChildNodes();
     if (children.getLength() == 0)
       return Collections.emptyList();
 
     List<XmlElement> result = new ArrayList<XmlElement>(children.getLength());
-    for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-      Node child = element.getChildNodes().item(i);
+    for (int i = 0; i < source.getChildNodes().getLength(); i++) {
+      Node child = source.getChildNodes().item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE)
         result.add(new XmlElement((Element) child));
     }
@@ -118,22 +116,7 @@ public final class XmlElement {
    * Returns the underlying element.
    */
   public Element element() {
-    return element;
-  }
-
-  /**
-   * Returns the first XmlElement for the {@code path}, where the path is / delimited element names,
-   * else null if an element cannot be found for the {@code path}.
-   */
-  public XmlElement find(String path) {
-    XmlElement e = this;
-    for (String segment : path.split("/")) {
-      e = e.get(segment);
-      if (e == null)
-        return null;
-    }
-
-    return e;
+    return source;
   }
 
   /**
@@ -141,7 +124,7 @@ public final class XmlElement {
    * {@code index} is not an element
    */
   public XmlElement get(int index) {
-    Node node = element.getChildNodes().item(index);
+    Node node = source.getChildNodes().item(index);
     return node.getNodeType() == Node.ELEMENT_NODE ? new XmlElement((Element) node) : null;
   }
 
@@ -149,8 +132,8 @@ public final class XmlElement {
    * Returns the first child element that matches the {@code name}, else null.
    */
   public XmlElement get(String name) {
-    for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-      Node child = element.getChildNodes().item(i);
+    for (int i = 0; i < source.getChildNodes().getLength(); i++) {
+      Node child = source.getChildNodes().item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(name))
         return new XmlElement((Element) child);
     }
@@ -163,8 +146,8 @@ public final class XmlElement {
    */
   public List<XmlElement> getAll(String name) {
     List<XmlElement> result = new ArrayList<XmlElement>();
-    for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-      Node child = element.getChildNodes().item(i);
+    for (int i = 0; i < source.getChildNodes().getLength(); i++) {
+      Node child = source.getChildNodes().item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(name))
         result.add(new XmlElement((Element) child));
     }
@@ -176,22 +159,22 @@ public final class XmlElement {
    * Returns whether the element contains the {@code attribute}.
    */
   public boolean hasAttribute(String attribute) {
-    return element.hasAttribute(attribute);
+    return source.hasAttribute(attribute);
   }
 
   /**
    * Returns whether the element contains attributes.
    */
   public boolean hasAttributes() {
-    return element.hasAttributes();
+    return source.hasAttributes();
   }
 
   /**
    * Returns whether the element contains any child elements with the {@code name}.
    */
   public boolean hasChild(String name) {
-    for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-      Node child = element.getChildNodes().item(i);
+    for (int i = 0; i < source.getChildNodes().getLength(); i++) {
+      Node child = source.getChildNodes().item(i);
       if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(name))
         return true;
     }
@@ -203,7 +186,7 @@ public final class XmlElement {
    * Returns the element's name.
    */
   public String name() {
-    return element.getNodeName();
+    return source.getNodeName();
   }
 
   @Override
@@ -216,8 +199,8 @@ public final class XmlElement {
    */
   public String toXml() {
     String name = name();
-    NodeList children = element.getChildNodes();
-    NamedNodeMap attributes = element.getAttributes();
+    NodeList children = source.getChildNodes();
+    NamedNodeMap attributes = source.getAttributes();
     StringBuilder sb = new StringBuilder("<").append(name);
 
     if (attributes.getLength() > 0) {
@@ -251,7 +234,7 @@ public final class XmlElement {
    */
   public String value() {
     StringBuilder sb = new StringBuilder();
-    NodeList children = element.getChildNodes();
+    NodeList children = source.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       Node child = children.item(i);
       if (child.getNodeType() == Node.TEXT_NODE)

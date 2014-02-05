@@ -1,6 +1,6 @@
 # Xsylum
 
-*XML parsing for the sane.*
+*XML parsing and DOM traversal for the sane.*
 
 ## Introduction
 
@@ -17,12 +17,37 @@ Xsylum is a dead simple simple wrapper around the Java XML parser API. It's most
 ## Usage
 
 ```java
+// Parse some XML to a document
+XmlDocument document = Xsylum documentFor(xmlFile);
+
+// Access the root element for the document
+XmlElement element = document.root();
+
+// Parse some XML to a root element
 XmlElement element = Xsylum.elementFor(xmlFile);
+
+// Access element attributes
+Map<String, String> attributes = element.attributes();
+
+// Access child elements
 List<XmlElement> children = element.children();
+
+// Search child elements
 List<XmlElement> books = element.getAll("book");
 XmlElement book = element.get("book");
-Map<String, String> attrs = book.attributes();
+
+// Access the value of an element
 String value = book.value();
+int value = book.get("copies-sold").valueAsInt();
+
+// Find child elements for XPath expressions
+XmlElement author = document.find("/catalog/book[2]/author");
+List<XmlElement> authors = XmlElement author = document.findAll("//author");
+
+// Find values for XPath expressions
+String author = document.findValue("//author/text()");
+int copiesSold = book.findValueAsInt(".//copies-sold/text()");
+List<String> authors = document.findValues("/catalog/book/author/text()");
 ```
 
 ## License

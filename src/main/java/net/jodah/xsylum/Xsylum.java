@@ -22,11 +22,46 @@ public final class Xsylum {
   private Xsylum() {
   }
 
-  public static Document documentFor(byte[] xml) throws XsylumException {
+  public static XmlDocument documentFor(byte[] xml) throws XsylumException {
     return documentFor(new ByteArrayInputStream(xml));
   }
 
-  public static Document documentFor(File file) throws XsylumException {
+  public static XmlDocument documentFor(File file) throws XsylumException {
+    return new XmlDocument(documentForInternal(file));
+  }
+
+  public static XmlDocument documentFor(InputStream inputStream) throws XsylumException {
+    return new XmlDocument(documentForInternal(inputStream));
+  }
+
+  public static XmlDocument documentFor(String xml) throws XsylumException {
+    return documentFor(new InputSource(new StringReader(xml)).getByteStream());
+  }
+
+  public static XmlElement elementFor(byte[] xml) throws XsylumException {
+    return new XmlElement(documentForInternal(new ByteArrayInputStream(xml)).getDocumentElement());
+  }
+
+  public static XmlElement elementFor(File file) throws XsylumException, IOException {
+    return new XmlElement(documentForInternal(file).getDocumentElement());
+  }
+
+  public static XmlElement elementFor(InputStream inputStream) throws XsylumException {
+    return new XmlElement(documentForInternal(inputStream).getDocumentElement());
+  }
+
+  public static XmlElement elementFor(String xml) throws XsylumException {
+    return new XmlElement(documentForInternal(
+        new InputSource(new StringReader(xml)).getByteStream()).getDocumentElement());
+  }
+
+  private static DocumentBuilder createBuilderFactory() throws ParserConfigurationException {
+    DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+    documentBuilderFactory.setValidating(false);
+    return documentBuilderFactory.newDocumentBuilder();
+  }
+
+  private static Document documentForInternal(File file) throws XsylumException {
     try {
       return createBuilderFactory().parse(file);
     } catch (Exception e) {
@@ -34,37 +69,11 @@ public final class Xsylum {
     }
   }
 
-  public static Document documentFor(InputStream inputStream) throws XsylumException {
+  private static Document documentForInternal(InputStream inputStream) throws XsylumException {
     try {
       return createBuilderFactory().parse(inputStream);
     } catch (Exception e) {
       throw new XsylumException(e, "Failed to create document from InputStream");
     }
-  }
-
-  public static Document documentFor(String xml) throws XsylumException {
-    return documentFor(new InputSource(new StringReader(xml)).getByteStream());
-  }
-
-  public static XmlElement elementFor(byte[] xml) throws XsylumException {
-    return new XmlElement(documentFor(xml).getDocumentElement());
-  }
-
-  public static XmlElement elementFor(File file) throws XsylumException, IOException {
-    return new XmlElement(documentFor(file).getDocumentElement());
-  }
-
-  public static XmlElement elementFor(InputStream inputStream) throws XsylumException {
-    return new XmlElement(documentFor(inputStream).getDocumentElement());
-  }
-
-  public static XmlElement elementFor(String xml) throws XsylumException {
-    return new XmlElement(documentFor(xml).getDocumentElement());
-  }
-
-  private static DocumentBuilder createBuilderFactory() throws ParserConfigurationException {
-    DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-    documentBuilderFactory.setValidating(false);
-    return documentBuilderFactory.newDocumentBuilder();
   }
 }
