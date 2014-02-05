@@ -122,6 +122,21 @@ public final class XmlElement {
   }
 
   /**
+   * Returns the first XmlElement for the {@code path}, where the path is / delimited element names,
+   * else null if an element cannot be found for the {@code path}.
+   */
+  public XmlElement find(String path) {
+    XmlElement e = this;
+    for (String segment : path.split("/")) {
+      e = e.get(segment);
+      if (e == null)
+        return null;
+    }
+
+    return e;
+  }
+
+  /**
    * Returns the XmlElement at the {@code index}, else null if none can be found or the node at the
    * {@code index} is not an element
    */
@@ -131,9 +146,22 @@ public final class XmlElement {
   }
 
   /**
+   * Returns the first child element that matches the {@code name}, else null.
+   */
+  public XmlElement get(String name) {
+    for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+      Node child = element.getChildNodes().item(i);
+      if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(name))
+        return new XmlElement((Element) child);
+    }
+
+    return null;
+  }
+
+  /**
    * Returns all child elements that match the {@code name} else empty List.
    */
-  public List<XmlElement> get(String name) {
+  public List<XmlElement> getAll(String name) {
     List<XmlElement> result = new ArrayList<XmlElement>();
     for (int i = 0; i < element.getChildNodes().getLength(); i++) {
       Node child = element.getChildNodes().item(i);

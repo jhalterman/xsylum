@@ -19,31 +19,31 @@ public class XmlElementTest {
   }
 
   public void shouldGetAsText() {
-    assertEquals(element.get("book").get(0).get("author").get(0).value(), "Gambardella, Matthew");
+    assertEquals(element.get("book").get("author").value(), "Gambardella, Matthew");
   }
 
   public void shouldGetAsDouble() {
-    assertEquals(element.get("book").get(0).get("price").get(0).valueAsDouble(), 44.95);
+    assertEquals(element.get("book").get("price").valueAsDouble(), 44.95);
   }
 
   public void shouldGetNodesByName() {
-    List<XmlElement> books = element.get("book");
+    List<XmlElement> books = element.getAll("book");
     assertEquals(books.size(), 5);
     for (XmlElement b : books)
       assertEquals(b.name(), "book");
-    XmlElement author = books.get(0).get("author").get(0);
+    XmlElement author = books.get(0).get("author");
     assertEquals(author.value(), "Gambardella, Matthew");
   }
 
   public void shouldGetNodeText() {
-    assertEquals(element.get("book").get(0).get("author").get(0).value(), "Gambardella, Matthew");
+    assertEquals(element.get("book").get("author").value(), "Gambardella, Matthew");
   }
 
   public void shouldGetAttributes() throws Exception {
     Map<String, String> expected = new HashMap<String, String>();
     expected.put("id", "bk101");
     expected.put("subid", "a");
-    assertEquals(element.get("book").get(0).attributes(), expected);
+    assertEquals(element.get("book").attributes(), expected);
   }
 
   public void shouldGetChildren() {

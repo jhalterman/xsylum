@@ -19,7 +19,8 @@ Xsylum is a dead simple simple wrapper around the Java XML parser API. It's most
 ```java
 XmlElement element = Xsylum.elementFor(xmlFile);
 List<XmlElement> children = element.children();
-XmlElement book = element.get("books").get(0);
+List<XmlElement> books = element.getAll("book");
+XmlElement book = element.get("book");
 Map<String, String> attrs = book.attributes();
 String value = book.value();
 ```
