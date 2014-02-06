@@ -56,8 +56,8 @@ public class XmlElementTest {
 
   public void shouldFindValue() throws Exception {
     XmlElement book = element.get("book");
-    assertEquals(book.findValue(".//author/text()"), "Gambardella, Matthew");
-    assertEquals(book.findValue("./author/text()"), "Gambardella, Matthew");
+    assertEquals(book.value(".//author/text()"), "Gambardella, Matthew");
+    assertEquals(book.value("./author/text()"), "Gambardella, Matthew");
   }
 
   public void shouldFind() throws Exception {

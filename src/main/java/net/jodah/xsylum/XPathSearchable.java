@@ -94,7 +94,7 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public String findValue(String expression) throws XPathExpressionException {
+  public String value(String expression) throws XPathExpressionException {
     return XPathFactory.newInstance().newXPath().compile(expression).evaluate(source);
   }
 
@@ -104,8 +104,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public boolean findValueAsBoolean(String expression) throws XPathExpressionException {
-    return Converter.booleanConverter.convert(findValue(expression).toLowerCase());
+  public boolean valueAsBoolean(String expression) throws XPathExpressionException {
+    return Converter.booleanConverter.convert(value(expression).toLowerCase());
   }
 
   /**
@@ -114,8 +114,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public double findValueAsDouble(String expression) throws XPathExpressionException {
-    return Converter.doubleConverter.convert(findValue(expression));
+  public double valueAsDouble(String expression) throws XPathExpressionException {
+    return Converter.doubleConverter.convert(value(expression));
   }
 
   /**
@@ -124,8 +124,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public int findValueAsInt(String expression) throws XPathExpressionException {
-    return Converter.intConverter.convert(findValue(expression));
+  public int valueAsInt(String expression) throws XPathExpressionException {
+    return Converter.intConverter.convert(value(expression));
   }
 
   /**
@@ -133,8 +133,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public List<String> findValues(String expression) throws XPathExpressionException {
-    return findValuesInternal(expression, null);
+  public List<String> values(String expression) throws XPathExpressionException {
+    return valuesInternal(expression, null);
   }
 
   /**
@@ -143,8 +143,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public List<Boolean> findValuesAsBooleans(String expression) throws XPathExpressionException {
-    return findValuesInternal(expression, Converter.booleanConverter);
+  public List<Boolean> valuesAsBoolean(String expression) throws XPathExpressionException {
+    return valuesInternal(expression, Converter.booleanConverter);
   }
 
   /**
@@ -153,8 +153,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public List<Double> findValuesAsDoubles(String expression) throws XPathExpressionException {
-    return findValuesInternal(expression, Converter.doubleConverter);
+  public List<Double> valuesAsDouble(String expression) throws XPathExpressionException {
+    return valuesInternal(expression, Converter.doubleConverter);
   }
 
   /**
@@ -163,8 +163,8 @@ public abstract class XPathSearchable<T> {
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
-  public List<Integer> findValuesAsInts(String expression) throws XPathExpressionException {
-    return findValuesInternal(expression, Converter.intConverter);
+  public List<Integer> valuesAsInt(String expression) throws XPathExpressionException {
+    return valuesInternal(expression, Converter.intConverter);
   }
 
   /**
@@ -173,7 +173,7 @@ public abstract class XPathSearchable<T> {
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   @SuppressWarnings("unchecked")
-  public <V> List<V> findValuesInternal(String expression, Converter<V> converter)
+  public <V> List<V> valuesInternal(String expression, Converter<V> converter)
       throws XPathExpressionException {
     XPathExpression expr = XPathFactory.newInstance().newXPath().compile(expression);
     NodeList nodeList = (NodeList) expr.evaluate(source, XPathConstants.NODESET);

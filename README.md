@@ -45,10 +45,10 @@ XmlElement author = document.find("/catalog/book[2]/author");
 List<XmlElement> authors = XmlElement author = document.findAll("//author");
 
 // Find values for XPath expressions
-String author = document.findValue("//author/text()");
-int copiesSold = book.findValueAsInt(".//copies-sold/text()");
-List<String> authors = document.findValues("/catalog/book/author/text()");
-List<Integer> allCopiesSold = document.findValuesAsInts("/catalog/book/copies-sold/text()");
+String author = document.value("//author/text()");
+int copiesSold = book.valueAsInt(".//copies-sold/text()");
+List<String> authors = document.values("/catalog/book/author/text()");
+List<Integer> allCopiesSold = document.valuesAsInt("/catalog/book/copies-sold/text()");
 ```
 
 ## License

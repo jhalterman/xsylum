@@ -18,23 +18,23 @@ public class XmlDocumentTest {
   }
 
   public void shouldFindValue() throws Exception {
-    assertEquals(document.findValue("//author/text()"), "Gambardella, Matthew");
-    assertEquals(document.findValue("/catalog/book[2]/author/text()"), "Ralls, Kim");
+    assertEquals(document.value("//author/text()"), "Gambardella, Matthew");
+    assertEquals(document.value("/catalog/book[2]/author/text()"), "Ralls, Kim");
   }
 
   public void shouldFindValues() throws Exception {
     List<String> expected = Arrays.asList("Gambardella, Matthew", "Ralls, Kim", "Corets, Eva",
         "Corets, Eva", "Corets, Eva");
-    assertEquals(document.findValues("//author/text()"), expected);
-    assertEquals(document.findValues("/catalog/book/author/text()"), expected);
+    assertEquals(document.values("//author/text()"), expected);
+    assertEquals(document.values("/catalog/book/author/text()"), expected);
     assertEquals(
-        document.findValues("/catalog/book[1 <= position() and position() <= 2]/author/text()"),
+        document.values("/catalog/book[1 <= position() and position() <= 2]/author/text()"),
         Arrays.asList("Gambardella, Matthew", "Ralls, Kim"));
   }
 
   public void shouldFindValuesAsDoubles() throws Exception {
     List<Double> expected = Arrays.asList(44.95, 5.95, 5.95, 5.95, 5.95);
-    assertEquals(document.findValuesAsDoubles("//price/text()"), expected);
+    assertEquals(document.valuesAsDouble("//price/text()"), expected);
   }
 
   public void shouldFind() throws Exception {
