@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -16,7 +17,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author Jonathan Halterman
  */
-public final class XmlElement extends XPathSearchable<Element> {
+public final class XmlElement extends XmlSearchable<Element> {
   public XmlElement(Element element) {
     super(element);
   }
@@ -115,27 +116,23 @@ public final class XmlElement extends XPathSearchable<Element> {
     return node.getNodeType() == Node.ELEMENT_NODE ? new XmlElement((Element) node) : null;
   }
 
-  /**
-   * Returns the first child element that matches the {@code name}, else null.
-   */
-  public XmlElement get(String name) {
+  @Override
+  public XmlElement get(String tagName) {
     for (int i = 0; i < source.getChildNodes().getLength(); i++) {
       Node child = source.getChildNodes().item(i);
-      if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(name))
+      if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(tagName))
         return new XmlElement((Element) child);
     }
 
     return null;
   }
 
-  /**
-   * Returns all child elements that match the {@code name} else empty List.
-   */
-  public List<XmlElement> getAll(String name) {
+  @Override
+  public List<XmlElement> getAll(String tagName) {
     List<XmlElement> result = new ArrayList<XmlElement>();
     for (int i = 0; i < source.getChildNodes().getLength(); i++) {
       Node child = source.getChildNodes().item(i);
-      if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(name))
+      if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(tagName))
         result.add(new XmlElement((Element) child));
     }
 
@@ -209,6 +206,8 @@ public final class XmlElement extends XPathSearchable<Element> {
           sb.append(new XmlElement((Element) child));
         else if (child.getNodeType() == Node.TEXT_NODE)
           sb.append(child.getNodeValue());
+        else if (child.getNodeType() == Node.CDATA_SECTION_NODE)
+          sb.append("<![CDATA[").append(((CharacterData) child).getData()).append("]]>");
       }
       sb.append("</").append(name).append('>');
     }
@@ -226,6 +225,8 @@ public final class XmlElement extends XPathSearchable<Element> {
       Node child = children.item(i);
       if (child.getNodeType() == Node.TEXT_NODE)
         sb.append(child.getNodeValue());
+      else if (child.getNodeType() == Node.CDATA_SECTION_NODE)
+        sb.append(((CharacterData) child).getData());
     }
     return sb.toString();
   }

@@ -2,6 +2,7 @@
    <book id="bk101" subid="a">
       <author>Gambardella, Matthew</author>
       <title>XML Developer's Guide</title>
+      <link><![CDATA[http://www.amazon.com/XML-Developers-Guide-Fabio-Arciniegas/dp/0072126485]]></link>
       <genre>Computer</genre>
       <price>44.95</price>
       <publish_date>2000-10-01</publish_date>
@@ -10,7 +11,9 @@
    </book>
    <book id="bk102" subid="b">
       <author>Ralls, Kim</author>
+      <author>Bar, Foo</author>
       <title>Midnight Rain</title>
+      <link><![CDATA[http://www.amazon.com/PowerShell-Deep-Dives-Jeffery-Hicks/dp/1617291315]]></link>
       <genre>Fantasy</genre>
       <price>5.95</price>
       <publish_date>2000-12-16</publish_date>
@@ -21,6 +24,7 @@
    <book id="bk103" subid="c">
       <author>Corets, Eva</author>
       <title>Maeve Ascendant</title>
+      <link><![CDATA[http://www.amazon.com/Learn-Windows-PowerShell-Month-Lunches/dp/1617291080]]></link>
       <genre>Fantasy</genre>
       <price>5.95</price>
       <publish_date>2000-11-17</publish_date>
@@ -31,6 +35,7 @@
    <book id="bk104" subid="d">
       <author>Corets, Eva</author>
       <title>Oberon's Legacy</title>
+      <link><![CDATA[http://www.amazon.com/Windows-Server-2012-Inside-Out/dp/0735666318]]></link>
       <genre>Fantasy</genre>
       <price>5.95</price>
       <publish_date>2001-03-10</publish_date>
@@ -42,6 +47,7 @@
    <book id="bk105" subid="e">
       <author>Corets, Eva</author>
       <title>The Sundered Grail</title>
+      <link><![CDATA[http://www.amazon.com/Group-Policy-Fundamentals-Security-Managed/dp/1118289404]]></link>
       <genre>Fantasy</genre>
       <price>5.95</price>
       <publish_date>2001-09-10</publish_date>

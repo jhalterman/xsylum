@@ -2,6 +2,7 @@ package net.jodah.xsylum;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,12 +11,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class XmlElementTest {
+public class XmlElementTest extends XmlSearchableTest {
   XmlElement element;
 
   @BeforeClass
   protected void beforeClass() throws Exception {
     element = Xsylum.elementFor(XmlElementTest.class.getResourceAsStream("document.xml"));
+  }
+
+  @Override
+  XmlSearchable<?> searchable() {
+    return element;
   }
 
   public void shouldGetAsText() {
@@ -24,15 +30,6 @@ public class XmlElementTest {
 
   public void shouldGetAsDouble() {
     assertEquals(element.get("book").get("price").valueAsDouble(), 44.95);
-  }
-
-  public void shouldGetNodesByName() {
-    List<XmlElement> books = element.getAll("book");
-    assertEquals(books.size(), 5);
-    for (XmlElement b : books)
-      assertEquals(b.name(), "book");
-    XmlElement author = books.get(0).get("author");
-    assertEquals(author.value(), "Gambardella, Matthew");
   }
 
   public void shouldGetNodeText() {
@@ -51,13 +48,26 @@ public class XmlElementTest {
     assertEquals(children.size(), 5);
     for (XmlElement c : children)
       assertEquals(c.name(), "book");
-    assertEquals(children.get(0).children().size(), 6);
+    assertEquals(children.get(0).children().size(), 7);
   }
 
   public void shouldFindValue() throws Exception {
     XmlElement book = element.get("book");
     assertEquals(book.value(".//author/text()"), "Gambardella, Matthew");
     assertEquals(book.value("./author/text()"), "Gambardella, Matthew");
+  }
+
+  public void shouldFindCDataValue() throws Exception {
+    assertEquals(element.find("//link").value(),
+        "http://www.amazon.com/XML-Developers-Guide-Fabio-Arciniegas/dp/0072126485");
+    assertEquals(element.find("/catalog/book[2]/link").value(),
+        "http://www.amazon.com/PowerShell-Deep-Dives-Jeffery-Hicks/dp/1617291315");
+  }
+
+  public void shouldFindValues() throws Exception {
+    List<String> expected = Arrays.asList("Ralls, Kim", "Bar, Foo");
+    XmlElement book = element.find("//book[2]");
+    assertEquals(book.values(".//author/text()"), expected);
   }
 
   public void shouldFind() throws Exception {

@@ -33,6 +33,7 @@ Map<String, String> attributes = element.attributes();
 List<XmlElement> children = element.children();
 
 // Search child elements
+List<XmlElement> authors = document.getAll("author");
 List<XmlElement> books = element.getAll("book");
 XmlElement book = element.get("book");
 
@@ -42,7 +43,7 @@ int value = book.get("copies-sold").valueAsInt();
 
 // Find child elements for XPath expressions
 XmlElement author = document.find("/catalog/book[2]/author");
-List<XmlElement> authors = XmlElement author = document.findAll("//author");
+List<XmlElement> authors = document.findAll("//author");
 
 // Find values for XPath expressions
 String author = document.value("//author/text()");

@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class XmlDocumentTest {
+public class XmlDocumentTest extends XmlSearchableTest {
   XmlDocument document;
 
   @BeforeClass
@@ -17,19 +17,45 @@ public class XmlDocumentTest {
     document = Xsylum.documentFor(XmlDocumentTest.class.getResourceAsStream("document.xml"));
   }
 
+  @Override
+  XmlSearchable<?> searchable() {
+    return document;
+  }
+
   public void shouldFindValue() throws Exception {
     assertEquals(document.value("//author/text()"), "Gambardella, Matthew");
     assertEquals(document.value("/catalog/book[2]/author/text()"), "Ralls, Kim");
   }
 
+  public void shouldFindCDataValue() throws Exception {
+    assertEquals(document.value("//link/text()"),
+        "http://www.amazon.com/XML-Developers-Guide-Fabio-Arciniegas/dp/0072126485");
+    assertEquals(document.value("/catalog/book[2]/link/text()"),
+        "http://www.amazon.com/PowerShell-Deep-Dives-Jeffery-Hicks/dp/1617291315");
+  }
+
   public void shouldFindValues() throws Exception {
-    List<String> expected = Arrays.asList("Gambardella, Matthew", "Ralls, Kim", "Corets, Eva",
-        "Corets, Eva", "Corets, Eva");
+    List<String> expected = Arrays.asList("Gambardella, Matthew", "Ralls, Kim", "Bar, Foo",
+        "Corets, Eva", "Corets, Eva", "Corets, Eva");
     assertEquals(document.values("//author/text()"), expected);
     assertEquals(document.values("/catalog/book/author/text()"), expected);
     assertEquals(
         document.values("/catalog/book[1 <= position() and position() <= 2]/author/text()"),
-        Arrays.asList("Gambardella, Matthew", "Ralls, Kim"));
+        Arrays.asList("Gambardella, Matthew", "Ralls, Kim", "Bar, Foo"));
+  }
+
+  public void shouldFindCDataValues() throws Exception {
+    List<String> expected = Arrays.asList(
+        "http://www.amazon.com/XML-Developers-Guide-Fabio-Arciniegas/dp/0072126485",
+        "http://www.amazon.com/PowerShell-Deep-Dives-Jeffery-Hicks/dp/1617291315",
+        "http://www.amazon.com/Learn-Windows-PowerShell-Month-Lunches/dp/1617291080",
+        "http://www.amazon.com/Windows-Server-2012-Inside-Out/dp/0735666318",
+        "http://www.amazon.com/Group-Policy-Fundamentals-Security-Managed/dp/1118289404");
+    assertEquals(document.values("//link/text()"), expected);
+    assertEquals(document.values("/catalog/book/link/text()"), expected);
+    assertEquals(document.values("/catalog/book[1 <= position() and position() <= 2]/link/text()"),
+        Arrays.asList("http://www.amazon.com/XML-Developers-Guide-Fabio-Arciniegas/dp/0072126485",
+            "http://www.amazon.com/PowerShell-Deep-Dives-Jeffery-Hicks/dp/1617291315"));
   }
 
   public void shouldFindValuesAsDoubles() throws Exception {
@@ -44,8 +70,9 @@ public class XmlDocumentTest {
 
   public void shouldFindAll() throws Exception {
     List<XmlElement> authors = document.findAll("//author");
-    assertEquals(authors.size(), 5);
+    assertEquals(authors.size(), 6);
     assertEquals(authors.get(0).value(), "Gambardella, Matthew");
     assertEquals(authors.get(1).value(), "Ralls, Kim");
   }
+
 }

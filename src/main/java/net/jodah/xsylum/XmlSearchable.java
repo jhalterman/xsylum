@@ -9,11 +9,12 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class XPathSearchable<T> {
+public abstract class XmlSearchable<T> {
   protected final T source;
 
   static interface Converter<T> {
@@ -52,7 +53,7 @@ public abstract class XPathSearchable<T> {
     T convert(String value);
   }
 
-  XPathSearchable(T source) {
+  XmlSearchable(T source) {
     this.source = source;
   }
 
@@ -88,6 +89,16 @@ public abstract class XPathSearchable<T> {
 
     return elements;
   }
+
+  /**
+   * Returns the first child element that matches the {@code tagName}, else null.
+   */
+  public abstract XmlElement get(String tagName);
+
+  /**
+   * Returns all child elements that match the {@code tagName} else empty List.
+   */
+  public abstract List<XmlElement> getAll(String tagName);
 
   /**
    * Finds the value for the XPath {@code expression} ending in text().
@@ -183,9 +194,13 @@ public abstract class XPathSearchable<T> {
     List<V> values = new ArrayList<V>();
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node node = nodeList.item(i);
+      String value = null;
       if (node.getNodeType() == Node.TEXT_NODE)
-        values.add(converter == null ? (V) node.getNodeValue()
-            : converter.convert(node.getNodeValue()));
+        value = node.getNodeValue();
+      else if (node.getNodeType() == Node.CDATA_SECTION_NODE)
+        value = ((CharacterData) node).getData();
+      if (value != null)
+        values.add(converter == null ? (V) value : converter.convert(value));
     }
 
     return values;
