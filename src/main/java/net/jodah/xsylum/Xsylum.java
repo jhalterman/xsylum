@@ -35,7 +35,7 @@ public final class Xsylum {
   }
 
   public static XmlDocument documentFor(String xml) throws XsylumException {
-    return documentFor(new InputSource(new StringReader(xml)).getByteStream());
+    return documentFor(new ByteArrayInputStream(xml.getBytes()));
   }
 
   public static XmlElement elementFor(byte[] xml) throws XsylumException {
