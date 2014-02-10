@@ -19,13 +19,6 @@ public class XmlDocument extends XmlSearchable<Document> {
     return source;
   }
 
-  /**
-   * Returns the root element for the document.
-   */
-  public XmlElement root() {
-    return new XmlElement(source.getDocumentElement());
-  }
-
   @Override
   public XmlElement get(String tagName) {
     NodeList nodeList = source.getElementsByTagName(tagName);
@@ -39,5 +32,17 @@ public class XmlDocument extends XmlSearchable<Document> {
     for (int i = 0; i < nodeList.getLength(); i++)
       result.add(new XmlElement((Element) nodeList.item(i)));
     return result;
+  }
+
+  /**
+   * Returns the root element for the document.
+   */
+  public XmlElement root() {
+    return new XmlElement(source.getDocumentElement());
+  }
+
+  @Override
+  public String toString() {
+    return root().toString();
   }
 }
