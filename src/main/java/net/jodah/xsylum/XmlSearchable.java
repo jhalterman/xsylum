@@ -39,6 +39,17 @@ public abstract class XmlSearchable<T> {
       }
     };
 
+    Converter<Long> longConverter = new Converter<Long>() {
+      @Override
+      public Long convert(String value) {
+        try {
+          return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+          return 0L;
+        }
+      }
+    };
+
     Converter<Double> doubleConverter = new Converter<Double>() {
       @Override
       public Double convert(String value) {
@@ -140,6 +151,16 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
+   * Finds the value for the XPath {@code expression} ending in text() as a long. Returns 0 if value
+   * cannot be parsed to a long.
+   * 
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public long valueAsLong(String expression) throws XPathExpressionException {
+    return Converter.longConverter.convert(value(expression));
+  }
+
+  /**
    * Finds the values for the XPath {@code expression} ending in text().
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
@@ -179,12 +200,22 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
+   * Finds the values for the XPath {@code expression} ending in text() as longs. Returns 0 for
+   * values that cannot be parsed to a long.
+   * 
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public List<Long> valuesAsLong(String expression) throws XPathExpressionException {
+    return valuesInternal(expression, Converter.longConverter);
+  }
+
+  /**
    * Finds the values for the XPath {@code expression} ending in text().
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
   @SuppressWarnings("unchecked")
-  public <V> List<V> valuesInternal(String expression, Converter<V> converter)
+  <V> List<V> valuesInternal(String expression, Converter<V> converter)
       throws XPathExpressionException {
     XPathExpression expr = XPathFactory.newInstance().newXPath().compile(expression);
     NodeList nodeList = (NodeList) expr.evaluate(source, XPathConstants.NODESET);

@@ -65,6 +65,16 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
+   * Get the value of the {@code attribute} as a long. Returns 0 if value cannot be parsed to a
+   * long.
+   * 
+   * @throws XsylumException if the {@code attribute} cannot be found
+   */
+  public long attributeAsLong(String attribute) throws XsylumException {
+    return Converter.longConverter.convert(attribute(attribute));
+  }
+
+  /**
    * Builds and returns a map of the element's attributes, else empty map if the element has no
    * attributes.
    */
@@ -251,5 +261,12 @@ public final class XmlElement extends XmlSearchable<Element> {
    */
   public int valueAsInt() {
     return Converter.intConverter.convert(value());
+  }
+
+  /**
+   * Get the element value as a long. Returns 0 if value cannot be parsed to a long.
+   */
+  public long valueAsLong() {
+    return Converter.longConverter.convert(value());
   }
 }
