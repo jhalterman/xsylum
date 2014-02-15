@@ -52,6 +52,10 @@ List<String> authors = document.values("/catalog/book/author/text()");
 List<Integer> allCopiesSold = document.valuesAsInt("/catalog/book/copies-sold/text()");
 ```
 
+## Docs
+
+JavaDocs are available [here](https://jhalterman.github.com/xsylum/javadoc).
+
 ## License
 
 Copyright 2014 Jonathan Halterman - Released under the [Apache 2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html).
