@@ -42,6 +42,7 @@ public class XmlDocumentTest extends XmlSearchableTest {
     assertEquals(
         document.values("/catalog/book[1 <= position() and position() <= 2]/author/text()"),
         Arrays.asList("Gambardella, Matthew", "Ralls, Kim", "Bar, Foo"));
+    assertEquals(document.values("//book/@subid"), Arrays.asList("a", "b", "c", "d", "e"));
   }
 
   public void shouldFindCDataValues() throws Exception {

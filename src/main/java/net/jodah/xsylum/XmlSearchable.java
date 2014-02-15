@@ -112,7 +112,7 @@ public abstract class XmlSearchable<T> {
   public abstract List<XmlElement> getAll(String tagName);
 
   /**
-   * Finds the value for the XPath {@code expression} ending in text().
+   * Finds the value for the XPath {@code expression}.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -121,8 +121,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the value for the XPath {@code expression} ending in text() as a boolean. Returns true
-   * for "true", "1", "yes", "y", else returns false.
+   * Finds the value for the XPath {@code expression} as a boolean. Returns true for "true", "1",
+   * "yes", "y", else returns false.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -131,8 +131,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the value for the XPath {@code expression} ending in text() as a double. Returns 0 if
-   * value cannot be parsed to a double.
+   * Finds the value for the XPath {@code expression} as a double. Returns 0 if value cannot be
+   * parsed to a double.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -141,8 +141,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the value for the XPath {@code expression} ending in text() as an integer. Returns 0 if
-   * value cannot be parsed to an int.
+   * Finds the value for the XPath {@code expression} as an integer. Returns 0 if value cannot be
+   * parsed to an int.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -151,8 +151,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the value for the XPath {@code expression} ending in text() as a long. Returns 0 if value
-   * cannot be parsed to a long.
+   * Finds the value for the XPath {@code expression} as a long. Returns 0 if value cannot be parsed
+   * to a long.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -161,7 +161,7 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} ending in text().
+   * Finds the values for the XPath {@code expression}.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -170,8 +170,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} ending in text() as booleans. Returns true
-   * for "true", "1", "yes", "y", else returns false.
+   * Finds the values for the XPath {@code expression} as booleans. Returns true for "true", "1",
+   * "yes", "y", else returns false.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -180,8 +180,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} ending in text() as doubles. Returns 0 for
-   * values that cannot be parsed to a double.
+   * Finds the values for the XPath {@code expression} as doubles. Returns 0 for values that cannot
+   * be parsed to a double.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -190,8 +190,8 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} ending in text() as integers. Returns 0 for
-   * values that cannot be parsed to an int.
+   * Finds the values for the XPath {@code expression} as integers. Returns 0 for values that cannot
+   * be parsed to an int.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -210,7 +210,7 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} ending in text().
+   * Finds the values for the XPath {@code expression}.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -226,10 +226,12 @@ public abstract class XmlSearchable<T> {
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node node = nodeList.item(i);
       String value = null;
-      if (node.getNodeType() == Node.TEXT_NODE)
+      if (node.getNodeType() == Node.TEXT_NODE || node.getNodeType() == Node.ATTRIBUTE_NODE)
         value = node.getNodeValue();
       else if (node.getNodeType() == Node.CDATA_SECTION_NODE)
         value = ((CharacterData) node).getData();
+
+      // Convert value
       if (value != null)
         values.add(converter == null ? (V) value : converter.convert(value));
     }
