@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 public abstract class XmlSearchable<T> {
   protected final T source;
 
-  static interface Converter<T> {
+  static interface Converter<V> {
     Converter<Integer> intConverter = new Converter<Integer>() {
       @Override
       public Integer convert(String value) {
@@ -61,11 +61,24 @@ public abstract class XmlSearchable<T> {
       }
     };
 
-    T convert(String value);
-  }
+    V convert(String value);
+  };
 
   XmlSearchable(T source) {
     this.source = source;
+  }
+
+  static <V extends Enum<V>> Converter<V> enumConverterFor(final Class<V> targetType) {
+    return new Converter<V>() {
+      @Override
+      public V convert(String value) {
+        try {
+          return Enum.valueOf(targetType, value);
+        } catch (Exception e) {
+          return null;
+        }
+      }
+    };
   }
 
   /**
@@ -141,6 +154,18 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
+   * Finds the value for the XPath {@code expression} as an Enum of type {@code V}. Returns null if
+   * value cannot be parsed to an Enum of type {@code V}.
+   * 
+   * @param <V> enum type
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public <V extends Enum<V>> V valueAsEnum(String expression, Class<V> targetEnum)
+      throws XPathExpressionException {
+    return enumConverterFor(targetEnum).convert(value(expression));
+  }
+
+  /**
    * Finds the value for the XPath {@code expression} as an integer. Returns 0 if value cannot be
    * parsed to an int.
    * 
@@ -187,6 +212,18 @@ public abstract class XmlSearchable<T> {
    */
   public List<Double> valuesAsDouble(String expression) throws XPathExpressionException {
     return valuesInternal(expression, Converter.doubleConverter);
+  }
+
+  /**
+   * Finds the values for the XPath {@code expression} as Enums of type {@code V}. Returns null for
+   * values that cannot be parsed to an Enum of type {@code V}.
+   * 
+   * @param <V> enum type
+   * @throws XPathExpressionException if the {@code expression} is invalid
+   */
+  public <V extends Enum<V>> List<V> valuesAsEnum(String expression, Class<V> targetEnum)
+      throws XPathExpressionException {
+    return valuesInternal(expression, enumConverterFor(targetEnum));
   }
 
   /**

@@ -48,7 +48,7 @@ public class XmlElementTest extends XmlSearchableTest {
     assertEquals(children.size(), 5);
     for (XmlElement c : children)
       assertEquals(c.name(), "book");
-    assertEquals(children.get(0).children().size(), 7);
+    assertEquals(children.get(0).children().size(), 8);
   }
 
   public void shouldFindValue() throws Exception {
@@ -74,5 +74,10 @@ public class XmlElementTest extends XmlSearchableTest {
     XmlElement book = element.get("book");
     assertEquals(book.find(".//author").value(), "Gambardella, Matthew");
     assertEquals(book.find("./author").value(), "Gambardella, Matthew");
+  }
+
+  public void shouldGetValueAsEnum() throws Exception {
+    BookType bookType = element.get("book").get("type").valueAsEnum(BookType.class);
+    assertEquals(bookType, BookType.hardcover);
   }
 }

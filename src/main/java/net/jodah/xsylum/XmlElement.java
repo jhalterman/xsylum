@@ -55,6 +55,18 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
+   * Get the value of the {@code attribute} as an enum of type {@code V}. Returns null if value
+   * cannot be parsed to an enum of type {@code V}.
+   * 
+   * @param <V> enum type
+   * @throws XsylumException if the {@code attribute} cannot be found
+   */
+  public <V extends Enum<V>> V attributeAsEnum(String attribute, Class<V> targetEnum)
+      throws XsylumException {
+    return enumConverterFor(targetEnum).convert(attribute(attribute));
+  }
+
+  /**
    * Get the value of the {@code attribute} as an integer. Returns 0 if value cannot be parsed to an
    * int.
    * 
@@ -254,6 +266,16 @@ public final class XmlElement extends XmlSearchable<Element> {
    */
   public double valueAsDouble() {
     return Converter.doubleConverter.convert(value());
+  }
+
+  /**
+   * Get the element value as an enum of type {@code V}. Returns null if value cannot be parsed to
+   * an enum of type {@code V}.
+   * 
+   * @param <V> enum type
+   */
+  public <V extends Enum<V>> V valueAsEnum(Class<V> targetEnum) {
+    return enumConverterFor(targetEnum).convert(value());
   }
 
   /**
