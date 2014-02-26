@@ -28,6 +28,7 @@ XmlElement element = Xsylum.elementFor(xmlFile);
 
 // Access element attributes
 Map<String, String> attributes = element.attributes();
+String id = element.attribute("id");
 
 // Access child elements
 List<XmlElement> children = element.children();
