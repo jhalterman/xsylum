@@ -76,4 +76,7 @@ public class XmlDocumentTest extends XmlSearchableTest {
     assertEquals(authors.get(1).value(), "Ralls, Kim");
   }
 
+  public void shouldFindWithXpath() throws Exception {
+    assertEquals(document.value("//book[@id='bk103']/author/text()"), "Corets, Eva");
+  }
 }
