@@ -259,7 +259,7 @@ public abstract class XmlSearchable<T> {
     if (nodeList.getLength() == 0)
       return Collections.emptyList();
 
-    List<V> values = new ArrayList<V>();
+    List<V> values = new ArrayList<V>(nodeList.getLength());
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node node = nodeList.item(i);
       String value = null;
