@@ -12,7 +12,15 @@ Xsylum is a dead simple simple wrapper around the Java XML parser API. It's most
 
 ## Setup
 
-`mvn install` (for now, unless anyone else cares enough about XML to send this thing to central)
+Add Xsylum as a Maven dependency:
+
+```xml
+<dependency>
+  <groupId>net.jodah</groupId>
+  <artifactId>xsylum</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
 
 ## Usage
 
