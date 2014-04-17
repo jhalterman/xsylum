@@ -1,4 +1,4 @@
-# Xsylum
+# Xsylum [![Build Status](https://travis-ci.org/jhalterman/xsylum.png)](https://travis-ci.org/jhalterman/xsylum)
 
 *XML parsing and DOM traversal for the sane.*
 
