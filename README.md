@@ -8,7 +8,7 @@ Why XML? Why indeed.
 
 But let's say you're working with some legacy services where XML is the thing. And you discover that the available XML parser APIs are bad. Really bad. What do you? Maybe you use Xsylum, that's what.
 
-Xsylum is a dead simple simple wrapper around the Java XML parser API. It's mostly intended for read operations, opting to traverse nodes on demand (when searching children) instead of eagerly building a separate DOM.
+Xsylum is a dead simple, zero-dependency wrapper around the Java XML parser API. It's mostly intended for read operations, opting to traverse nodes on demand (when searching children) instead of eagerly building a separate DOM.
 
 ## Setup
 
@@ -26,7 +26,7 @@ Add Xsylum as a Maven dependency:
 
 ```java
 // Parse some XML to a document
-XmlDocument document = Xsylum documentFor(xmlFile);
+XmlDocument document = Xsylum.documentFor(xmlFile);
 
 // Access the root element for the document
 XmlElement element = document.root();

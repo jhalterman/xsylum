@@ -138,6 +138,9 @@ public final class XmlElement extends XmlSearchable<Element> {
     return node.getNodeType() == Node.ELEMENT_NODE ? new XmlElement((Element) node) : null;
   }
 
+  /**
+   * Returns the first child XmlElement matching the {@code tagName}.
+   */
   @Override
   public XmlElement get(String tagName) {
     for (int i = 0; i < source.getChildNodes().getLength(); i++) {
@@ -149,6 +152,9 @@ public final class XmlElement extends XmlSearchable<Element> {
     return null;
   }
 
+  /**
+   * Returns all child XmlElements matching the {@code tagName}.
+   */
   @Override
   public List<XmlElement> getAll(String tagName) {
     List<XmlElement> result = new ArrayList<XmlElement>();

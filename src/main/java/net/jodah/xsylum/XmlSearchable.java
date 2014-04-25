@@ -14,6 +14,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * An XPath searchable XML object.
+ * 
+ * @author Jonathan Halterman
+ * @param <T> source type
+ */
 public abstract class XmlSearchable<T> {
   protected final T source;
 
@@ -33,9 +39,8 @@ public abstract class XmlSearchable<T> {
       @Override
       public Boolean convert(String value) {
         value = value.toLowerCase();
-        if ("true".equals(value) || "1".equals(value) || "yes".equals(value) || "y".equals(value))
-          return true;
-        return false;
+        return "true".equals(value) || "1".equals(value) || "yes".equals(value)
+            || "y".equals(value);
       }
     };
 
