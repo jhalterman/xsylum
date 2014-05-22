@@ -35,8 +35,8 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
-   * Get the value of the {@code attribute} as a boolean. Returns true for "true", "1", "yes", "y",
-   * else returns false.
+   * Get the value of the {@code attribute} as a boolean. Returns true for "true", "1", "yes", "y"
+   * ignoring case, else returns false.
    * 
    * @throws XsylumException if the {@code attribute} cannot be found
    */
@@ -45,10 +45,10 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
-   * Get the value of the {@code attribute} as a double. Returns 0 if value cannot be parsed to a
-   * double.
+   * Get the value of the {@code attribute} as a double.
    * 
    * @throws XsylumException if the {@code attribute} cannot be found
+   * @throws NumberFormatException if the attribute is not a valid double
    */
   public double attributeAsDouble(String attribute) throws XsylumException {
     return Converter.doubleConverter.convert(attribute(attribute));
@@ -67,20 +67,20 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
-   * Get the value of the {@code attribute} as an integer. Returns 0 if value cannot be parsed to an
-   * int.
+   * Get the value of the {@code attribute} as an integer.
    * 
    * @throws XsylumException if the {@code attribute} cannot be found
+   * @throws NumberFormatException if the attribute is not a valid int
    */
   public int attributeAsInt(String attribute) throws XsylumException {
     return Converter.intConverter.convert(attribute(attribute));
   }
 
   /**
-   * Get the value of the {@code attribute} as a long. Returns 0 if value cannot be parsed to a
-   * long.
+   * Get the value of the {@code attribute} as a long.
    * 
    * @throws XsylumException if the {@code attribute} cannot be found
+   * @throws NumberFormatException if the attribute is not a valid long
    */
   public long attributeAsLong(String attribute) throws XsylumException {
     return Converter.longConverter.convert(attribute(attribute));
@@ -260,15 +260,17 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
-   * Get the element value as a boolean. Returns true for "true", "1", "yes", "y", else returns
-   * false.
+   * Get the element value as a boolean. Returns true for "true", "1", "yes", "y" ignoring case,
+   * else returns false.
    */
   public boolean valueAsBoolean() {
     return Converter.booleanConverter.convert(value());
   }
 
   /**
-   * Get the element value as a double. Returns 0 if value cannot be parsed to a double.
+   * Get the element value as a double.
+   * 
+   * @throws NumberFormatException if the value is not a valid double
    */
   public double valueAsDouble() {
     return Converter.doubleConverter.convert(value());
@@ -285,14 +287,18 @@ public final class XmlElement extends XmlSearchable<Element> {
   }
 
   /**
-   * Get the element value as an integer. Returns 0 if value cannot be parsed to an integer.
+   * Get the element value as an integer.
+   * 
+   * @throws NumberFormatException if the value is not a valid int
    */
   public int valueAsInt() {
     return Converter.intConverter.convert(value());
   }
 
   /**
-   * Get the element value as a long. Returns 0 if value cannot be parsed to a long.
+   * Get the element value as a long.
+   * 
+   * @throws NumberFormatException if the value is not a valid long
    */
   public long valueAsLong() {
     return Converter.longConverter.convert(value());

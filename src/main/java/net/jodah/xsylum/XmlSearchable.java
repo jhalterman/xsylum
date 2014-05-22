@@ -27,11 +27,7 @@ public abstract class XmlSearchable<T> {
     Converter<Integer> intConverter = new Converter<Integer>() {
       @Override
       public Integer convert(String value) {
-        try {
-          return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-          return 0;
-        }
+        return Integer.parseInt(value);
       }
     };
 
@@ -47,22 +43,14 @@ public abstract class XmlSearchable<T> {
     Converter<Long> longConverter = new Converter<Long>() {
       @Override
       public Long convert(String value) {
-        try {
-          return Long.parseLong(value);
-        } catch (NumberFormatException e) {
-          return 0L;
-        }
+        return Long.parseLong(value);
       }
     };
 
     Converter<Double> doubleConverter = new Converter<Double>() {
       @Override
       public Double convert(String value) {
-        try {
-          return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-          return 0.0;
-        }
+        return Double.parseDouble(value);
       }
     };
 
@@ -140,7 +128,7 @@ public abstract class XmlSearchable<T> {
 
   /**
    * Finds the value for the XPath {@code expression} as a boolean. Returns true for "true", "1",
-   * "yes", "y", else returns false.
+   * "yes", "y" ignoring case, else returns false.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -149,10 +137,10 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the value for the XPath {@code expression} as a double. Returns 0 if value cannot be
-   * parsed to a double.
+   * Finds the value for the XPath {@code expression} as a double.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
+   * @throws NumberFormatException if the value for the expression is not a valid double
    */
   public double valueAsDouble(String expression) throws XPathExpressionException {
     return Converter.doubleConverter.convert(value(expression));
@@ -171,20 +159,20 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the value for the XPath {@code expression} as an integer. Returns 0 if value cannot be
-   * parsed to an int.
+   * Finds the value for the XPath {@code expression} as an integer.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
+   * @throws NumberFormatException if the value for the expression is not a valid int
    */
   public int valueAsInt(String expression) throws XPathExpressionException {
     return Converter.intConverter.convert(value(expression));
   }
 
   /**
-   * Finds the value for the XPath {@code expression} as a long. Returns 0 if value cannot be parsed
-   * to a long.
+   * Finds the value for the XPath {@code expression} as a long.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
+   * @throws NumberFormatException if the value for the expression is not a valid long
    */
   public long valueAsLong(String expression) throws XPathExpressionException {
     return Converter.longConverter.convert(value(expression));
@@ -201,7 +189,7 @@ public abstract class XmlSearchable<T> {
 
   /**
    * Finds the values for the XPath {@code expression} as booleans. Returns true for "true", "1",
-   * "yes", "y", else returns false.
+   * "yes", "y" ignoring case, else returns false.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
    */
@@ -210,10 +198,10 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} as doubles. Returns 0 for values that cannot
-   * be parsed to a double.
+   * Finds the values for the XPath {@code expression} as doubles.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
+   * @throws NumberFormatException if the values for the expression are not valid doubles
    */
   public List<Double> valuesAsDouble(String expression) throws XPathExpressionException {
     return valuesInternal(expression, Converter.doubleConverter);
@@ -232,20 +220,20 @@ public abstract class XmlSearchable<T> {
   }
 
   /**
-   * Finds the values for the XPath {@code expression} as integers. Returns 0 for values that cannot
-   * be parsed to an int.
+   * Finds the values for the XPath {@code expression} as integers.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
+   * @throws NumberFormatException if the values for the expression are not valid ints
    */
   public List<Integer> valuesAsInt(String expression) throws XPathExpressionException {
     return valuesInternal(expression, Converter.intConverter);
   }
 
   /**
-   * Finds the values for the XPath {@code expression} ending in text() as longs. Returns 0 for
-   * values that cannot be parsed to a long.
+   * Finds the values for the XPath {@code expression} ending in text() as longs.
    * 
    * @throws XPathExpressionException if the {@code expression} is invalid
+   * @throws NumberFormatException if the values for the expression are not valid longs
    */
   public List<Long> valuesAsLong(String expression) throws XPathExpressionException {
     return valuesInternal(expression, Converter.longConverter);
